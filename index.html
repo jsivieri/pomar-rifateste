@@ -1,0 +1,366 @@
+<!-- ========== INÍCIO PÁGINA 1 - VENDA DE RIFAS ========== -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rifa 5º Ano Pomar</title>
+    <style>
+        :root {
+            --primary: #00f7ff;
+            --secondary: #ff00e4;
+            --dark: #0a0a20;
+            --light: #e0e0ff;
+        }
+        
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            margin: 0;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(0, 247, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255, 0, 228, 0.1) 0%, transparent 50%);
+        }
+        
+        @font-face {
+            font-family: 'Orbitron';
+            src: url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--primary);
+            position: relative;
+        }
+        
+        header::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--secondary), transparent);
+        }
+        
+        h1 {
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
+            margin: 0;
+            font-size: 2.2em;
+        }
+        
+        .subtitle {
+            color: var(--secondary);
+            margin-top: 10px;
+            font-size: 1.2em;
+        }
+        
+        .prize {
+            color: var(--primary);
+            font-weight: bold;
+            margin: 15px 0;
+            font-size: 1.3em;
+        }
+        
+        .rifa-container {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .numero-rifa {
+            background-color: rgba(0, 247, 255, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--light);
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .numero-rifa:hover {
+            background-color: rgba(0, 247, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 247, 255, 0.2);
+        }
+        
+        .numero-rifa::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                transparent 45%,
+                rgba(0, 247, 255, 0.1) 50%,
+                transparent 55%
+            );
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+        }
+        
+        .numero-rifa:hover::before {
+            left: 100%;
+            top: 100%;
+        }
+        
+        .numero-rifa.vendido {
+            background-color: rgba(255, 0, 228, 0.2);
+            border-color: var(--secondary);
+            cursor: not-allowed;
+        }
+        
+        .numero-rifa.vendido::after {
+            content: "✓";
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--secondary);
+            color: var(--dark);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: var(--dark);
+            border: 1px solid var(--primary);
+            padding: 30px;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 247, 255, 0.5);
+            position: relative;
+        }
+        
+        .modal-content h2 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+        
+        .modal-content label {
+            display: block;
+            margin: 15px 0 5px;
+            color: var(--light);
+        }
+        
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(0, 247, 255, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--light);
+            font-family: 'Orbitron', sans-serif;
+            border-radius: 4px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .modal-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .confirm-btn {
+            background-color: var(--primary);
+            color: var(--dark);
+        }
+        
+        .confirm-btn:hover {
+            background-color: #00d9e0;
+            box-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
+        }
+        
+        .cancel-btn {
+            background-color: transparent;
+            color: var(--secondary);
+            border: 1px solid var(--secondary);
+        }
+        
+        .cancel-btn:hover {
+            background-color: rgba(255, 0, 228, 0.1);
+            box-shadow: 0 0 10px rgba(255, 0, 228, 0.5);
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 247, 255, 0.3);
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            background-color: transparent;
+            color: var(--secondary);
+            border: 1px solid var(--secondary);
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .nav-btn:hover {
+            background-color: rgba(255, 0, 228, 0.1);
+            box-shadow: 0 0 10px rgba(255, 0, 228, 0.5);
+        }
+        
+        @media (max-width: 768px) {
+            .rifa-container {
+                grid-template-columns: repeat(5, 1fr);
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .subtitle, .prize {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>RIFA SOLIDÁRIA</h1>
+        <div class="subtitle">Ajude os alunos do 5º ano Pomar a realizarem sua viagem!</div>
+        <div class="prize">Prêmio: Air Fryer Mondial - Sorteio em 20/06/2025</div>
+        <div>Valor por número: R$ 10,00</div>
+    </header>
+    
+    <div class="rifa-container" id="rifaContainer">
+        <!-- Os números da rifa serão gerados por JavaScript -->
+    </div>
+    
+    <div class="nav-buttons">
+        <a href="pagina2.html" class="nav-btn">Ver Números Vendidos</a>
+        <a href="pagina3.html" class="nav-btn">Realizar Sorteio</a>
+    </div>
+    
+    <div class="modal" id="compraModal">
+        <div class="modal-content">
+            <h2>Comprar Número <span id="numeroSelecionado"></span></h2>
+            <label for="nomeComprador">Nome do Comprador:</label>
+            <input type="text" id="nomeComprador" placeholder="Digite o nome completo">
+            <div class="modal-buttons">
+                <button class="cancel-btn" id="cancelarCompra">Cancelar</button>
+                <button class="confirm-btn" id="confirmarCompra">Confirmar</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Armazenamento local para os números vendidos
+        let numerosVendidos = JSON.parse(localStorage.getItem('numerosVendidos')) || {};
+        
+        // Gerar os números da rifa
+        const rifaContainer = document.getElementById('rifaContainer');
+        
+        for (let i = 1; i <= 150; i++) {
+            const numeroElement = document.createElement('div');
+            numeroElement.className = 'numero-rifa';
+            numeroElement.textContent = i;
+            numeroElement.dataset.numero = i;
+            
+            if (numerosVendidos[i]) {
+                numeroElement.classList.add('vendido');
+            }
+            
+            numeroElement.addEventListener('click', function() {
+                if (!this.classList.contains('vendido')) {
+                    abrirModal(this.dataset.numero);
+                }
+            });
+            
+            rifaContainer.appendChild(numeroElement);
+        }
+        
+        // Modal de compra
+        const modal = document.getElementById('compraModal');
+        const numeroSelecionado = document.getElementById('numeroSelecionado');
+        const nomeComprador = document.getElementById('nomeComprador');
+        const cancelarBtn = document.getElementById('cancelarCompra');
+        const confirmarBtn = document.getElementById('confirmarCompra');
+        
+        let numeroAtual = null;
+        
+        function abrirModal(numero) {
+            numeroAtual = numero;
+            numeroSelecionado.textContent = numero;
+            nomeComprador.value = '';
+            modal.style.display = 'flex';
+        }
+        
+        function fecharModal() {
+            modal.style.display = 'none';
+        }
+        
+        cancelarBtn.addEventListener('click', fecharModal);
+        
+        confirmarBtn.addEventListener('click', function() {
+            if (nomeComprador.value.trim() === '') {
+                alert('Por favor, informe o nome do comprador.');
+                return;
+            }
+            
+            // Registrar a venda
+            numerosVendidos[numeroAtual] = nomeComprador.value.trim();
+            localStorage.setItem('numerosVendidos', JSON.stringify(numerosVendidos));
+            
+            // Atualizar visualmente
+            const numeroElement = document.querySelector(`.numero-rifa[data-numero="${numeroAtual}"]`);
+            numeroElement.classList.add('vendido');
+            
+            fecharModal();
+        });
+        
+        // Fechar modal ao clicar fora
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                fecharModal();
+            }
+        });
+    </script>
+</body>
+</html>
+<!-- ========== FIM PÁGINA 1 ========== -->

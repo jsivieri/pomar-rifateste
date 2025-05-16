@@ -1,0 +1,369 @@
+<!-- ========== INÍCIO PÁGINA 3 - SORTEIO ========== -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorteio - Rifa 5º Ano Pomar</title>
+    <style>
+        :root {
+            --primary: #00f7ff;
+            --secondary: #ff00e4;
+            --dark: #0a0a20;
+            --light: #e0e0ff;
+        }
+        
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            margin: 0;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(0, 247, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255, 0, 228, 0.1) 0%, transparent 50%);
+        }
+        
+        @font-face {
+            font-family: 'Orbitron';
+            src: url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--primary);
+            position: relative;
+        }
+        
+        header::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--secondary), transparent);
+        }
+        
+        h1 {
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
+            margin: 0;
+            font-size: 2.2em;
+        }
+        
+        .subtitle {
+            color: var(--secondary);
+            margin-top: 10px;
+            font-size: 1.2em;
+        }
+        
+        .winner-box {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 30px;
+            margin: 40px auto;
+            max-width: 600px;
+            text-align: center;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 247, 255, 0.3);
+        }
+        
+        .winner-box::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                transparent 45%,
+                rgba(0, 247, 255, 0.05) 50%,
+                transparent 55%
+            );
+            transform: rotate(45deg);
+            animation: shine 6s linear infinite;
+        }
+        
+        @keyframes shine {
+            0% {
+                left: -50%;
+                top: -50%;
+            }
+            100% {
+                left: 150%;
+                top: 150%;
+            }
+        }
+        
+        .winner-content {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+        }
+        
+        .winner-placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.2em;
+        }
+        
+        .winner-name {
+            color: var(--secondary);
+            font-size: 2em;
+            margin: 10px 0;
+            text-shadow: 0 0 10px rgba(255, 0, 228, 0.5);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                text-shadow: 0 0 10px rgba(255, 0, 228, 0.5);
+            }
+            50% {
+                transform: scale(1.05);
+                text-shadow: 0 0 20px rgba(255, 0, 228, 0.8);
+            }
+            100% {
+                transform: scale(1);
+                text-shadow: 0 0 10px rgba(255, 0, 228, 0.5);
+            }
+        }
+        
+        .winner-number {
+            color: var(--primary);
+            font-size: 1.5em;
+            margin-top: 10px;
+        }
+        
+        .countdown {
+            font-size: 3em;
+            color: var(--primary);
+            margin: 20px 0;
+        }
+        
+        .draw-button {
+            display: block;
+            margin: 30px auto;
+            padding: 15px 40px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            border: none;
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .draw-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 247, 255, 0.4);
+        }
+        
+        .draw-button:active {
+            transform: translateY(1px);
+        }
+        
+        .draw-button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: all 0.5s ease;
+        }
+        
+        .draw-button:hover::before {
+            left: 100%;
+        }
+        
+        .stats {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 247, 255, 0.3);
+        }
+        
+        .stats p {
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+        
+        .sold-count {
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 247, 255, 0.3);
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            background-color: transparent;
+            color: var(--secondary);
+            border: 1px solid var(--secondary);
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .nav-btn:hover {
+            background-color: rgba(255, 0, 228, 0.1);
+            box-shadow: 0 0 10px rgba(255, 0, 228, 0.5);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .subtitle {
+                font-size: 1em;
+            }
+            
+            .winner-name {
+                font-size: 1.5em;
+            }
+            
+            .winner-number {
+                font-size: 1.2em;
+            }
+            
+            .countdown {
+                font-size: 2em;
+            }
+            
+            .draw-button {
+                padding: 12px 30px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SORTEIO DA RIFA</h1>
+        <div class="subtitle">Air Fryer Mondial - 5º ano Pomar</div>
+    </header>
+    
+    <div class="winner-box">
+        <div class="winner-content">
+            <div class="winner-placeholder" id="winnerPlaceholder">O vencedor aparecerá aqui...</div>
+            <div class="winner-name" id="winnerName" style="display: none;"></div>
+            <div class="winner-number" id="winnerNumber" style="display: none;"></div>
+            <div class="countdown" id="countdown" style="display: none;"></div>
+        </div>
+    </div>
+    
+    <button class="draw-button" id="drawButton">SORTEAR</button>
+    
+    <div class="stats">
+        <p id="soldStats">Foram vendidas <span class="sold-count" id="soldCount">0</span> rifas</p>
+        <p id="remainingStats">Rifas restantes: <span class="sold-count" id="remainingCount">150</span></p>
+    </div>
+    
+    <div class="nav-buttons">
+        <a href="index.html" class="nav-btn">Voltar para Venda</a>
+        <a href="pagina2.html" class="nav-btn">Ver Números Vendidos</a>
+    </div>
+    
+    <script>
+        // Elementos da página
+        const drawButton = document.getElementById('drawButton');
+        const winnerPlaceholder = document.getElementById('winnerPlaceholder');
+        const winnerName = document.getElementById('winnerName');
+        const winnerNumber = document.getElementById('winnerNumber');
+        const countdown = document.getElementById('countdown');
+        const soldCount = document.getElementById('soldCount');
+        const remainingCount = document.getElementById('remainingCount');
+        
+        // Recuperar números vendidos do localStorage
+        let numerosVendidos = JSON.parse(localStorage.getItem('numerosVendidos')) || {};
+        const totalVendidos = Object.keys(numerosVendidos).length;
+        
+        // Atualizar estatísticas
+        soldCount.textContent = totalVendidos;
+        remainingCount.textContent = 150 - totalVendidos;
+        
+        // Função para realizar o sorteio
+        drawButton.addEventListener('click', function() {
+            if (totalVendidos === 0) {
+                alert('Nenhuma rifa foi vendida ainda!');
+                return;
+            }
+            
+            // Desabilitar botão durante o sorteio
+            drawButton.disabled = true;
+            
+            // Esconder placeholder e mostrar contagem regressiva
+            winnerPlaceholder.style.display = 'none';
+            countdown.style.display = 'block';
+            
+            // Contagem regressiva
+            let seconds = 5;
+            countdown.textContent = seconds;
+            
+            const countdownInterval = setInterval(() => {
+                seconds--;
+                countdown.textContent = seconds;
+                
+                if (seconds <= 0) {
+                    clearInterval(countdownInterval);
+                    realizarSorteio();
+                }
+            }, 1000);
+        });
+        
+        function realizarSorteio() {
+            // Obter array de números vendidos
+            const numeros = Object.keys(numerosVendidos);
+            
+            // Sortear um número aleatório
+            const numeroSorteado = numeros[Math.floor(Math.random() * numeros.length)];
+            const nomeVencedor = numerosVendidos[numeroSorteado];
+            
+            // Mostrar o vencedor
+            countdown.style.display = 'none';
+            winnerName.textContent = nomeVencedor;
+            winnerNumber.textContent = `Número sorteado: ${numeroSorteado}`;
+            winnerName.style.display = 'block';
+            winnerNumber.style.display = 'block';
+            
+            // Reabilitar botão
+            drawButton.disabled = false;
+            
+            // Efeito de confete (simulado com CSS)
+            winnerName.classList.add('winner-animation');
+        }
+    </script>
+</body>
+</html>
+<!-- ========== FIM PÁGINA 3 ========== -->

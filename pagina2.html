@@ -1,0 +1,208 @@
+<!-- ========== INÍCIO PÁGINA 2 - NÚMEROS VENDIDOS ========== -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Números Vendidos - Rifa 5º Ano Pomar</title>
+    <style>
+        :root {
+            --primary: #00f7ff;
+            --secondary: #ff00e4;
+            --dark: #0a0a20;
+            --light: #e0e0ff;
+        }
+        
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            margin: 0;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(0, 247, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255, 0, 228, 0.1) 0%, transparent 50%);
+        }
+        
+        @font-face {
+            font-family: 'Orbitron';
+            src: url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--primary);
+            position: relative;
+        }
+        
+        header::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--secondary), transparent);
+        }
+        
+        h1 {
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
+            margin: 0;
+            font-size: 2.2em;
+        }
+        
+        .subtitle {
+            color: var(--secondary);
+            margin-top: 10px;
+            font-size: 1.2em;
+        }
+        
+        .numbers-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .number-item {
+            background-color: rgba(0, 247, 255, 0.05);
+            border: 1px solid rgba(0, 247, 255, 0.3);
+            padding: 15px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .number-item:hover {
+            background-color: rgba(0, 247, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 247, 255, 0.2);
+        }
+        
+        .number {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.2em;
+            min-width: 40px;
+        }
+        
+        .buyer {
+            text-align: right;
+            flex-grow: 1;
+            padding-left: 15px;
+            border-left: 1px dashed rgba(0, 247, 255, 0.3);
+        }
+        
+        .empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: rgba(255, 0, 228, 0.5);
+            font-size: 1.2em;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 247, 255, 0.3);
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            background-color: transparent;
+            color: var(--secondary);
+            border: 1px solid var(--secondary);
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .nav-btn:hover {
+            background-color: rgba(255, 0, 228, 0.1);
+            box-shadow: 0 0 10px rgba(255, 0, 228, 0.5);
+        }
+        
+        .sold-count {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.1em;
+            color: var(--primary);
+        }
+        
+        @media (max-width: 768px) {
+            .numbers-list {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .subtitle {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>NÚMEROS VENDIDOS</h1>
+        <div class="subtitle">Rifa para viagem do 5º ano Pomar</div>
+    </header>
+    
+    <div class="sold-count" id="soldCount">
+        <!-- Contagem será preenchida por JavaScript -->
+    </div>
+    
+    <div class="numbers-list" id="numbersList">
+        <!-- Lista será preenchida por JavaScript -->
+    </div>
+    
+    <div class="nav-buttons">
+        <a href="index.html" class="nav-btn">Voltar para Venda</a>
+        <a href="pagina3.html" class="nav-btn">Realizar Sorteio</a>
+    </div>
+    
+    <script>
+        // Recuperar números vendidos do localStorage
+        const numerosVendidos = JSON.parse(localStorage.getItem('numerosVendidos')) || {};
+        const numbersList = document.getElementById('numbersList');
+        const soldCount = document.getElementById('soldCount');
+        
+        // Atualizar contagem
+        const totalVendidos = Object.keys(numerosVendidos).length;
+        soldCount.textContent = `Total de rifas vendidas: ${totalVendidos} de 150`;
+        
+        // Exibir números vendidos
+        if (totalVendidos === 0) {
+            numbersList.innerHTML = '<div class="empty">Nenhum número vendido ainda.</div>';
+        } else {
+            // Ordenar números
+            const numerosOrdenados = Object.entries(numerosVendidos)
+                .sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
+            
+            // Criar itens da lista
+            numerosOrdenados.forEach(([numero, comprador]) => {
+                const item = document.createElement('div');
+                item.className = 'number-item';
+                
+                item.innerHTML = `
+                    <div class="number">${numero}</div>
+                    <div class="buyer">${comprador}</div>
+                `;
+                
+                numbersList.appendChild(item);
+            });
+        }
+    </script>
+</body>
+</html>
+<!-- ========== FIM PÁGINA 2 ========== -->
