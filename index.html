@@ -7,90 +7,107 @@
     <title>Rifa 5º Ano Pomar</title>
     <style>
         :root {
-            --primary: #00f7ff;
-            --secondary: #ff00e4;
-            --dark: #0a0a20;
-            --light: #e0e0ff;
+            --primary: #4a7c59;        /* Verde principal da árvore */
+            --secondary: #6b8e5a;      /* Verde mais claro */
+            --accent: #8b4513;         /* Marrom do tronco */
+            --dark: #2d3e1f;           /* Verde escuro para fundo */
+            --light: #f0f4e8;          /* Bege claro natural */
+            --success: #5a8a3a;        /* Verde para sucessos */
+            --warning: #d2691e;        /* Laranja terra */
+            --background: #1a2317;     /* Verde muito escuro para fundo */
         }
         
         body {
-            font-family: 'Orbitron', sans-serif;
-            background-color: var(--dark);
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, var(--background) 0%, var(--dark) 100%);
             color: var(--light);
             margin: 0;
             padding: 20px;
+            min-height: 100vh;
             background-image: 
-                radial-gradient(circle at 25% 25%, rgba(0, 247, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(255, 0, 228, 0.1) 0%, transparent 50%);
-        }
-        
-        @font-face {
-            font-family: 'Orbitron';
-            src: url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+                radial-gradient(circle at 20% 80%, rgba(75, 124, 89, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(107, 142, 90, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(139, 69, 19, 0.05) 0%, transparent 50%);
         }
         
         header {
             text-align: center;
-            padding: 20px;
-            margin-bottom: 30px;
-            border-bottom: 2px solid var(--primary);
+            padding: 30px 20px;
+            margin-bottom: 40px;
+            border-bottom: 3px solid var(--primary);
             position: relative;
+            background: rgba(75, 124, 89, 0.05);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(75, 124, 89, 0.2);
         }
         
-        header::after {
+        header::before {
             content: "";
             position: absolute;
-            bottom: -5px;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--secondary), transparent);
+            top: -2px;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--secondary), var(--accent), var(--secondary), transparent);
+            border-radius: 2px;
         }
         
         h1 {
             color: var(--primary);
-            text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
-            margin: 0;
-            font-size: 2.2em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin: 0 0 15px 0;
+            font-size: 2.5em;
+            font-weight: bold;
+            letter-spacing: 1px;
         }
         
         .subtitle {
             color: var(--secondary);
-            margin-top: 10px;
-            font-size: 1.2em;
+            margin: 10px 0;
+            font-size: 1.3em;
+            font-style: italic;
         }
         
         .prize {
-            color: var(--primary);
+            color: var(--accent);
             font-weight: bold;
-            margin: 15px 0;
-            font-size: 1.3em;
+            margin: 20px 0;
+            font-size: 1.4em;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
         }
         
         .rifa-container {
             display: grid;
             grid-template-columns: repeat(10, 1fr);
-            gap: 10px;
-            margin-top: 30px;
+            gap: 12px;
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(107, 142, 90, 0.05);
+            border-radius: 15px;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         
         .numero-rifa {
-            background-color: rgba(0, 247, 255, 0.1);
-            border: 1px solid var(--primary);
+            background: linear-gradient(145deg, var(--primary), var(--secondary));
+            border: 2px solid var(--success);
             color: var(--light);
-            padding: 10px;
+            padding: 12px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            border-radius: 4px;
+            transition: all 0.4s ease;
+            border-radius: 8px;
             position: relative;
             overflow: hidden;
+            font-weight: bold;
+            font-size: 1.1em;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
         }
         
         .numero-rifa:hover {
-            background-color: rgba(0, 247, 255, 0.3);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 247, 255, 0.2);
+            background: linear-gradient(145deg, var(--secondary), var(--success));
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(75, 124, 89, 0.4);
+            border-color: var(--accent);
         }
         
         .numero-rifa::before {
@@ -101,24 +118,27 @@
             width: 200%;
             height: 200%;
             background: linear-gradient(
-                to bottom right,
+                45deg,
                 transparent 45%,
-                rgba(0, 247, 255, 0.1) 50%,
+                rgba(240, 244, 232, 0.1) 50%,
                 transparent 55%
             );
             transform: rotate(45deg);
-            transition: all 0.5s ease;
+            transition: all 0.6s ease;
+            opacity: 0;
         }
         
         .numero-rifa:hover::before {
             left: 100%;
             top: 100%;
+            opacity: 1;
         }
         
         .numero-rifa.vendido {
-            background-color: rgba(255, 0, 228, 0.2);
-            border-color: var(--secondary);
+            background: linear-gradient(145deg, var(--accent), #a0522d);
+            border-color: var(--warning);
             cursor: not-allowed;
+            opacity: 0.7;
         }
         
         .numero-rifa.vendido::after {
@@ -126,16 +146,17 @@
             position: absolute;
             top: -5px;
             right: -5px;
-            background-color: var(--secondary);
-            color: var(--dark);
-            width: 20px;
-            height: 20px;
+            background: var(--success);
+            color: var(--light);
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: bold;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
         }
         
         .modal {
@@ -145,117 +166,159 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(26, 35, 23, 0.9);
             z-index: 1000;
             align-items: center;
             justify-content: center;
         }
         
         .modal-content {
-            background-color: var(--dark);
-            border: 1px solid var(--primary);
-            padding: 30px;
-            width: 80%;
-            max-width: 400px;
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0, 247, 255, 0.5);
+            background: linear-gradient(145deg, var(--dark), var(--background));
+            border: 2px solid var(--primary);
+            padding: 40px;
+            width: 90%;
+            max-width: 450px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(75, 124, 89, 0.3);
             position: relative;
+        }
+        
+        .modal-content::before {
+            content: "";
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent), var(--primary));
+            border-radius: 15px;
+            z-index: -1;
         }
         
         .modal-content h2 {
             color: var(--primary);
             margin-top: 0;
+            text-align: center;
+            font-size: 1.8em;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
         }
         
         .modal-content label {
             display: block;
-            margin: 15px 0 5px;
+            margin: 20px 0 8px;
             color: var(--light);
+            font-weight: bold;
         }
         
         .modal-content input {
             width: 100%;
-            padding: 10px;
-            background-color: rgba(0, 247, 255, 0.1);
-            border: 1px solid var(--primary);
+            padding: 15px;
+            background: rgba(240, 244, 232, 0.1);
+            border: 2px solid var(--secondary);
             color: var(--light);
-            font-family: 'Orbitron', sans-serif;
-            border-radius: 4px;
+            font-family: 'Georgia', serif;
+            border-radius: 8px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-content input:focus {
+            border-color: var(--primary);
+            background: rgba(240, 244, 232, 0.15);
+            outline: none;
+            box-shadow: 0 0 10px rgba(75, 124, 89, 0.3);
         }
         
         .modal-buttons {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
+            margin-top: 30px;
+            gap: 15px;
         }
         
         .modal-buttons button {
-            padding: 10px 20px;
+            flex: 1;
+            padding: 15px 25px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Georgia', serif;
             font-weight: bold;
+            font-size: 1.1em;
             transition: all 0.3s ease;
         }
         
         .confirm-btn {
-            background-color: var(--primary);
-            color: var(--dark);
+            background: linear-gradient(145deg, var(--success), var(--primary));
+            color: var(--light);
+            box-shadow: 0 4px 15px rgba(90, 138, 58, 0.3);
         }
         
         .confirm-btn:hover {
-            background-color: #00d9e0;
-            box-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
+            background: linear-gradient(145deg, var(--primary), var(--success));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(90, 138, 58, 0.4);
         }
         
         .cancel-btn {
-            background-color: transparent;
-            color: var(--secondary);
-            border: 1px solid var(--secondary);
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
         }
         
         .cancel-btn:hover {
-            background-color: rgba(255, 0, 228, 0.1);
-            box-shadow: 0 0 10px rgba(255, 0, 228, 0.5);
+            background: rgba(139, 69, 19, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3);
         }
         
         .nav-buttons {
             display: flex;
             justify-content: space-between;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(0, 247, 255, 0.3);
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid rgba(75, 124, 89, 0.3);
         }
         
         .nav-btn {
-            padding: 10px 20px;
-            background-color: transparent;
-            color: var(--secondary);
-            border: 1px solid var(--secondary);
-            border-radius: 4px;
+            padding: 15px 30px;
+            background: linear-gradient(145deg, var(--accent), #a0522d);
+            color: var(--light);
+            border: 2px solid var(--warning);
+            border-radius: 10px;
             cursor: pointer;
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Georgia', serif;
+            font-weight: bold;
             transition: all 0.3s ease;
             text-decoration: none;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(139, 69, 19, 0.2);
         }
         
         .nav-btn:hover {
-            background-color: rgba(255, 0, 228, 0.1);
-            box-shadow: 0 0 10px rgba(255, 0, 228, 0.5);
+            background: linear-gradient(145deg, #a0522d, var(--accent));
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(139, 69, 19, 0.4);
         }
         
         @media (max-width: 768px) {
             .rifa-container {
                 grid-template-columns: repeat(5, 1fr);
+                gap: 8px;
+                padding: 15px;
             }
             
             h1 {
-                font-size: 1.8em;
+                font-size: 2em;
             }
             
             .subtitle, .prize {
-                font-size: 1em;
+                font-size: 1.1em;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                gap: 15px;
             }
         }
     </style>
@@ -289,31 +352,62 @@
         </div>
     </div>
     
+    <script src="api-firebase.js"></script>
+    <script src="backup-system.js"></script>
+    <script src="email-system.js"></script>
     <script>
-        // Armazenamento local para os números vendidos
-        let numerosVendidos = JSON.parse(localStorage.getItem('numerosVendidos')) || {};
+        // Armazenamento para os números vendidos
+        let numerosVendidos = {};
         
         // Gerar os números da rifa
         const rifaContainer = document.getElementById('rifaContainer');
         
-        for (let i = 1; i <= 150; i++) {
-            const numeroElement = document.createElement('div');
-            numeroElement.className = 'numero-rifa';
-            numeroElement.textContent = i;
-            numeroElement.dataset.numero = i;
+        // Função para carregar números vendidos da API
+        async function carregarNumerosVendidos() {
+            try {
+                numerosVendidos = await API.getNumerosVendidos();
+                console.log('Números carregados da API:', numerosVendidos);
+                atualizarInterface();
+            } catch (error) {
+                console.error('Erro ao carregar números vendidos:', error);
+                // Fallback para localStorage se a API não estiver disponível
+                numerosVendidos = JSON.parse(localStorage.getItem('numerosVendidos')) || {};
+                console.log('Números carregados do localStorage:', numerosVendidos);
+                atualizarInterface();
+            }
+        }
+        
+        // Função para atualizar a interface
+        function atualizarInterface() {
+            rifaContainer.innerHTML = '';
             
-            if (numerosVendidos[i]) {
-                numeroElement.classList.add('vendido');
+            for (let i = 1; i <= 150; i++) {
+                const numeroElement = document.createElement('div');
+                numeroElement.className = 'numero-rifa';
+                numeroElement.textContent = i;
+                numeroElement.dataset.numero = i;
+                
+                if (numerosVendidos[i]) {
+                    numeroElement.classList.add('vendido');
+                }
+                
+                numeroElement.addEventListener('click', function() {
+                    if (!this.classList.contains('vendido')) {
+                        abrirModal(this.dataset.numero);
+                    }
+                });
+                
+                rifaContainer.appendChild(numeroElement);
             }
             
-            numeroElement.addEventListener('click', function() {
-                if (!this.classList.contains('vendido')) {
-                    abrirModal(this.dataset.numero);
-                }
-            });
-            
-            rifaContainer.appendChild(numeroElement);
+            // Mostrar mensagem se não há números vendidos
+            if (Object.keys(numerosVendidos).length === 0) {
+                console.log('Nova rifa iniciada - todos os números disponíveis!');
+            }
         }
+        
+        // Carregar dados quando a página carrega
+        carregarNumerosVendidos();
         
         // Modal de compra
         const modal = document.getElementById('compraModal');
@@ -337,21 +431,32 @@
         
         cancelarBtn.addEventListener('click', fecharModal);
         
-        confirmarBtn.addEventListener('click', function() {
+        confirmarBtn.addEventListener('click', async function() {
             if (nomeComprador.value.trim() === '') {
                 alert('Por favor, informe o nome do comprador.');
                 return;
             }
             
-            // Registrar a venda
-            numerosVendidos[numeroAtual] = nomeComprador.value.trim();
-            localStorage.setItem('numerosVendidos', JSON.stringify(numerosVendidos));
-            
-            // Atualizar visualmente
-            const numeroElement = document.querySelector(`.numero-rifa[data-numero="${numeroAtual}"]`);
-            numeroElement.classList.add('vendido');
-            
-            fecharModal();
+            try {
+                // Tentar registrar a venda na API
+                await API.comprarNumero(numeroAtual, nomeComprador.value.trim());
+                
+                // Atualizar dados locais
+                numerosVendidos[numeroAtual] = nomeComprador.value.trim();
+                
+                // Também salvar no localStorage como backup
+                localStorage.setItem('numerosVendidos', JSON.stringify(numerosVendidos));
+                
+                // Atualizar visualmente
+                const numeroElement = document.querySelector(`.numero-rifa[data-numero="${numeroAtual}"]`);
+                numeroElement.classList.add('vendido');
+                
+                fecharModal();
+                
+                alert('Número comprado com sucesso!');
+            } catch (error) {
+                alert('Erro ao comprar número: ' + error.message);
+            }
         });
         
         // Fechar modal ao clicar fora

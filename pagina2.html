@@ -7,147 +7,233 @@
     <title>Números Vendidos - Rifa 5º Ano Pomar</title>
     <style>
         :root {
-            --primary: #00f7ff;
-            --secondary: #ff00e4;
-            --dark: #0a0a20;
-            --light: #e0e0ff;
+            --primary: #4a7c59;        /* Verde principal da árvore */
+            --secondary: #6b8e5a;      /* Verde mais claro */
+            --accent: #8b4513;         /* Marrom do tronco */
+            --dark: #2d3e1f;           /* Verde escuro para fundo */
+            --light: #f0f4e8;          /* Bege claro natural */
+            --success: #5a8a3a;        /* Verde para sucessos */
+            --warning: #d2691e;        /* Laranja terra */
+            --background: #1a2317;     /* Verde muito escuro para fundo */
         }
         
         body {
-            font-family: 'Orbitron', sans-serif;
-            background-color: var(--dark);
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, var(--background) 0%, var(--dark) 100%);
             color: var(--light);
             margin: 0;
             padding: 20px;
+            min-height: 100vh;
             background-image: 
-                radial-gradient(circle at 25% 25%, rgba(0, 247, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(255, 0, 228, 0.1) 0%, transparent 50%);
-        }
-        
-        @font-face {
-            font-family: 'Orbitron';
-            src: url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+                radial-gradient(circle at 20% 80%, rgba(75, 124, 89, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(107, 142, 90, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(139, 69, 19, 0.05) 0%, transparent 50%);
         }
         
         header {
             text-align: center;
-            padding: 20px;
-            margin-bottom: 30px;
-            border-bottom: 2px solid var(--primary);
+            padding: 30px 20px;
+            margin-bottom: 40px;
+            border-bottom: 3px solid var(--primary);
             position: relative;
+            background: rgba(75, 124, 89, 0.05);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(75, 124, 89, 0.2);
         }
         
-        header::after {
+        header::before {
             content: "";
             position: absolute;
-            bottom: -5px;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--secondary), transparent);
+            top: -2px;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--secondary), var(--accent), var(--secondary), transparent);
+            border-radius: 2px;
         }
         
         h1 {
             color: var(--primary);
-            text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
-            margin: 0;
-            font-size: 2.2em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin: 0 0 15px 0;
+            font-size: 2.5em;
+            font-weight: bold;
+            letter-spacing: 1px;
         }
         
         .subtitle {
             color: var(--secondary);
-            margin-top: 10px;
-            font-size: 1.2em;
+            margin: 10px 0;
+            font-size: 1.3em;
+            font-style: italic;
         }
         
         .numbers-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 15px;
-            margin-top: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
         }
         
         .number-item {
-            background-color: rgba(0, 247, 255, 0.05);
-            border: 1px solid rgba(0, 247, 255, 0.3);
-            padding: 15px;
-            border-radius: 6px;
+            background: linear-gradient(145deg, rgba(75, 124, 89, 0.1), rgba(107, 142, 90, 0.05));
+            border: 2px solid rgba(75, 124, 89, 0.3);
+            padding: 20px;
+            border-radius: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .number-item::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(240, 244, 232, 0.1), transparent);
+            transition: all 0.6s ease;
         }
         
         .number-item:hover {
-            background-color: rgba(0, 247, 255, 0.1);
-            box-shadow: 0 0 15px rgba(0, 247, 255, 0.2);
+            background: linear-gradient(145deg, rgba(75, 124, 89, 0.15), rgba(107, 142, 90, 0.1));
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(75, 124, 89, 0.2);
+        }
+        
+        .number-item:hover::before {
+            left: 100%;
         }
         
         .number {
             color: var(--primary);
             font-weight: bold;
-            font-size: 1.2em;
-            min-width: 40px;
+            font-size: 1.4em;
+            min-width: 50px;
+            background: linear-gradient(145deg, var(--success), var(--primary));
+            color: var(--light);
+            padding: 8px 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
         }
         
         .buyer {
             text-align: right;
             flex-grow: 1;
-            padding-left: 15px;
-            border-left: 1px dashed rgba(0, 247, 255, 0.3);
+            padding: 8px 15px;
+            margin-left: 20px;
+            border-left: 2px dashed rgba(75, 124, 89, 0.4);
+            font-size: 1.1em;
+            color: var(--accent);
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            background: rgba(139, 69, 19, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(139, 69, 19, 0.3);
         }
         
         .empty {
             grid-column: 1 / -1;
             text-align: center;
-            padding: 40px;
-            color: rgba(255, 0, 228, 0.5);
-            font-size: 1.2em;
+            padding: 60px 20px;
+            color: var(--secondary);
+            font-size: 1.4em;
+            background: linear-gradient(145deg, rgba(139, 69, 19, 0.1), rgba(210, 105, 30, 0.05));
+            border: 2px dashed var(--accent);
+            border-radius: 15px;
+            font-style: italic;
         }
         
         .nav-buttons {
             display: flex;
             justify-content: space-between;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(0, 247, 255, 0.3);
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid rgba(75, 124, 89, 0.3);
+            gap: 20px;
         }
         
         .nav-btn {
-            padding: 10px 20px;
-            background-color: transparent;
-            color: var(--secondary);
-            border: 1px solid var(--secondary);
-            border-radius: 4px;
+            flex: 1;
+            padding: 15px 30px;
+            background: linear-gradient(145deg, var(--accent), #a0522d);
+            color: var(--light);
+            border: 2px solid var(--warning);
+            border-radius: 10px;
             cursor: pointer;
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Georgia', serif;
+            font-weight: bold;
             transition: all 0.3s ease;
             text-decoration: none;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(139, 69, 19, 0.2);
         }
         
         .nav-btn:hover {
-            background-color: rgba(255, 0, 228, 0.1);
-            box-shadow: 0 0 10px rgba(255, 0, 228, 0.5);
+            background: linear-gradient(145deg, #a0522d, var(--accent));
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(139, 69, 19, 0.4);
         }
         
         .sold-count {
             text-align: center;
-            margin: 20px 0;
-            font-size: 1.1em;
+            margin: 30px 0;
+            font-size: 1.3em;
             color: var(--primary);
+            font-weight: bold;
+            background: linear-gradient(145deg, rgba(75, 124, 89, 0.1), rgba(107, 142, 90, 0.05));
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid rgba(75, 124, 89, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sold-count .sold-count {
+            color: var(--success);
+            font-size: 1.2em;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
         }
         
         @media (max-width: 768px) {
             .numbers-list {
                 grid-template-columns: 1fr;
+                gap: 15px;
             }
             
             h1 {
-                font-size: 1.8em;
+                font-size: 2em;
             }
             
             .subtitle {
-                font-size: 1em;
+                font-size: 1.1em;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .number-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .buyer {
+                border-left: none;
+                border-top: 2px dashed rgba(75, 124, 89, 0.4);
+                padding-left: 0;
+                padding-top: 15px;
+                margin-left: 0;
+                margin-top: 15px;
+                text-align: center;
             }
         }
     </style>
@@ -171,37 +257,89 @@
         <a href="pagina3.html" class="nav-btn">Realizar Sorteio</a>
     </div>
     
+    <script src="api-firebase.js"></script>
+    <script src="backup-system.js"></script>
+    <script src="email-system.js"></script>
     <script>
-        // Recuperar números vendidos do localStorage
-        const numerosVendidos = JSON.parse(localStorage.getItem('numerosVendidos')) || {};
+        // Elementos da página
         const numbersList = document.getElementById('numbersList');
         const soldCount = document.getElementById('soldCount');
         
-        // Atualizar contagem
-        const totalVendidos = Object.keys(numerosVendidos).length;
-        soldCount.textContent = `Total de rifas vendidas: ${totalVendidos} de 150`;
-        
-        // Exibir números vendidos
-        if (totalVendidos === 0) {
-            numbersList.innerHTML = '<div class="empty">Nenhum número vendido ainda.</div>';
-        } else {
-            // Ordenar números
-            const numerosOrdenados = Object.entries(numerosVendidos)
-                .sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
-            
-            // Criar itens da lista
-            numerosOrdenados.forEach(([numero, comprador]) => {
-                const item = document.createElement('div');
-                item.className = 'number-item';
+        // Função para carregar e exibir números vendidos
+        async function carregarNumerosVendidos() {
+            try {
+                // Tentar carregar da API
+                const numerosVendidos = await API.getNumerosVendidos();
+                const stats = await API.getEstatisticas();
                 
-                item.innerHTML = `
-                    <div class="number">${numero}</div>
-                    <div class="buyer">${comprador}</div>
-                `;
+                // Atualizar contagem
+                soldCount.textContent = `Total de rifas vendidas: ${stats.vendidos} de ${stats.total_rifas}`;
                 
-                numbersList.appendChild(item);
-            });
+                // Exibir números vendidos
+                if (stats.vendidos === 0) {
+                    numbersList.innerHTML = '<div class="empty">🎉 Nova rifa iniciada!<br>Nenhum número vendido ainda.</div>';
+                } else {
+                    // Ordenar números
+                    const numerosOrdenados = Object.entries(numerosVendidos)
+                        .sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
+                    
+                    // Limpar lista
+                    numbersList.innerHTML = '';
+                    
+                    // Criar itens da lista
+                    numerosOrdenados.forEach(([numero, comprador]) => {
+                        const item = document.createElement('div');
+                        item.className = 'number-item';
+                        
+                        item.innerHTML = `
+                            <div class="number">${numero}</div>
+                            <div class="buyer">${comprador}</div>
+                        `;
+                        
+                        numbersList.appendChild(item);
+                    });
+                }
+            } catch (error) {
+                console.error('Erro ao carregar dados da API, usando localStorage');
+                
+                // Fallback para localStorage
+                const numerosVendidos = JSON.parse(localStorage.getItem('numerosVendidos')) || {};
+                const totalVendidos = Object.keys(numerosVendidos).length;
+                
+                soldCount.textContent = `Total de rifas vendidas: ${totalVendidos} de 150`;
+                
+                if (totalVendidos === 0) {
+                    numbersList.innerHTML = '<div class="empty">🎉 Nova rifa iniciada!<br>Nenhum número vendido ainda.</div>';
+                } else {
+                    const numerosOrdenados = Object.entries(numerosVendidos)
+                        .sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
+                    
+                    numbersList.innerHTML = '';
+                    
+                    numerosOrdenados.forEach(([numero, comprador]) => {
+                        const item = document.createElement('div');
+                        item.className = 'number-item';
+                        
+                        item.innerHTML = `
+                            <div class="number">${numero}</div>
+                            <div class="buyer">${comprador}</div>
+                        `;
+                        
+                        numbersList.appendChild(item);
+                    });
+                }
+            }
         }
+        
+        // Recarregar dados quando a página fica visível (útil ao navegar entre páginas)
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                carregarNumerosVendidos();
+            }
+        });
+        
+        // Carregar dados quando a página carrega
+        carregarNumerosVendidos();
     </script>
 </body>
 </html>
