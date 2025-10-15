@@ -451,10 +451,15 @@
     
     <div class="winner-box">
         <div class="winner-content">
-            <div class="winner-placeholder" id="winnerPlaceholder">O vencedor aparecerá aqui...</div>
-            <div class="winner-name" id="winnerName" style="display: none;"></div>
+            <div class="winner-animation-container" id="winnerAnimationContainer" style="position: relative; height: 120px; overflow: hidden;">
+                <div style="position: absolute; top: 50%; left: 0; width: 100%; height: 50px; transform: translateY(-50%); pointer-events: none; z-index: 2;">
+                    <div id="winnerWindow" style="background: rgba(240,244,232,0.15); border: 2px solid var(--primary); border-radius: 12px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 2em; color: var(--primary); font-weight: bold; box-shadow: 0 2px 8px rgba(75,124,89,0.15); position: relative;">
+                        <!-- Nome sorteado aparecerá aqui -->
+                    </div>
+                </div>
+                <div id="namesScroller" style="position: absolute; left: 0; width: 100%; will-change: transform; z-index: 1;"></div>
+            </div>
             <div class="winner-number" id="winnerNumber" style="display: none;"></div>
-            <div class="countdown" id="countdown" style="display: none;"></div>
         </div>
     </div>
     
@@ -488,193 +493,209 @@
     <script src="backup-system.js"></script>
     <script src="email-system.js"></script>
     <script>
-        // Elementos da página
-        const drawButton = document.getElementById('drawButton');
-        const winnerPlaceholder = document.getElementById('winnerPlaceholder');
-        const winnerName = document.getElementById('winnerName');
-        const winnerNumber = document.getElementById('winnerNumber');
-        const countdown = document.getElementById('countdown');
-        const soldCount = document.getElementById('soldCount');
-        const remainingCount = document.getElementById('remainingCount');
-        
-        // Elementos do modal de senha
-        const passwordModal = document.getElementById('passwordModal');
-        const passwordInput = document.getElementById('passwordInput');
-        const passwordConfirm = document.getElementById('passwordConfirm');
-        const passwordCancel = document.getElementById('passwordCancel');
-        const errorMessage = document.getElementById('errorMessage');
-        
-        let senhaDigitada = null;
-        let totalVendidos = 0;
-        
-        // Função para carregar estatísticas
-        async function carregarEstatisticas() {
-            try {
-                const stats = await API.getEstatisticas();
-                totalVendidos = stats.vendidos;
-                soldCount.textContent = totalVendidos;
-                remainingCount.textContent = stats.restantes;
-            } catch (error) {
-                console.error('Erro ao carregar estatísticas:', error);
-                
-                // Fallback para localStorage
-                const numerosVendidos = JSON.parse(localStorage.getItem('numerosVendidos')) || {};
-                totalVendidos = Object.keys(numerosVendidos).length;
-                soldCount.textContent = totalVendidos;
-                remainingCount.textContent = 150 - totalVendidos;
-            }
+    // Elementos da página
+    const drawButton = document.getElementById('drawButton');
+    const winnerNumber = document.getElementById('winnerNumber');
+    const soldCount = document.getElementById('soldCount');
+    const remainingCount = document.getElementById('remainingCount');
+    const winnerWindow = document.getElementById('winnerWindow');
+    const namesScroller = document.getElementById('namesScroller');
+    const winnerAnimationContainer = document.getElementById('winnerAnimationContainer');
+
+    // Elementos do modal de senha
+    const passwordModal = document.getElementById('passwordModal');
+    const passwordInput = document.getElementById('passwordInput');
+    const passwordConfirm = document.getElementById('passwordConfirm');
+    const passwordCancel = document.getElementById('passwordCancel');
+    const errorMessage = document.getElementById('errorMessage');
+
+    let senhaDigitada = null;
+    let totalVendidos = 0;
+
+    // Função para carregar estatísticas
+    async function carregarEstatisticas() {
+        try {
+            const stats = await API.getEstatisticas();
+            totalVendidos = stats.vendidos;
+            soldCount.textContent = totalVendidos;
+            remainingCount.textContent = stats.restantes;
+        } catch (error) {
+            console.error('Erro ao carregar estatísticas:', error);
+            // Fallback para localStorage
+            const numerosVendidos = JSON.parse(localStorage.getItem('numerosVendidos')) || {};
+            totalVendidos = Object.keys(numerosVendidos).length;
+            soldCount.textContent = totalVendidos;
+            remainingCount.textContent = 150 - totalVendidos;
         }
-        
-        // Carregar estatísticas quando a página carrega
-        carregarEstatisticas();
-        
-        // Função para realizar o sorteio
-        drawButton.addEventListener('click', async function() {
-            if (totalVendidos === 0) {
-                alert('Nenhuma rifa foi vendida ainda!');
-                return;
-            }
-            
-            // Abrir modal de senha
-            abrirModalSenha();
-        });
-        
-        // Funções do modal de senha
-        function abrirModalSenha() {
-            passwordInput.value = '';
+    }
+    carregarEstatisticas();
+
+    // Função para realizar o sorteio
+    drawButton.addEventListener('click', async function() {
+        if (totalVendidos === 0) {
+            alert('Nenhuma rifa foi vendida ainda!');
+            return;
+        }
+        abrirModalSenha();
+    });
+
+    // Funções do modal de senha
+    function abrirModalSenha() {
+        passwordInput.value = '';
+        passwordInput.classList.remove('error');
+        errorMessage.style.display = 'none';
+        passwordModal.style.display = 'flex';
+        passwordInput.focus();
+    }
+    function mostrarErroSenha() {
+        passwordInput.classList.add('error');
+        errorMessage.style.display = 'block';
+        passwordInput.value = '';
+        passwordInput.focus();
+        setTimeout(() => {
+            passwordInput.classList.remove('error');
+        }, 1000);
+    }
+    function fecharModalSenha() {
+        passwordModal.style.display = 'none';
+    }
+    passwordCancel.addEventListener('click', fecharModalSenha);
+    passwordConfirm.addEventListener('click', async function() {
+        senhaDigitada = passwordInput.value;
+        if (!senhaDigitada) {
+            mostrarErroSenha();
+            return;
+        }
+        const SENHA_CORRETA = '9248';
+        if (senhaDigitada !== SENHA_CORRETA) {
+            mostrarErroSenha();
+            return;
+        }
+        fecharModalSenha();
+        iniciarSorteioAnimado();
+    });
+    passwordInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            passwordConfirm.click();
+        }
+    });
+    passwordInput.addEventListener('input', function() {
+        if (passwordInput.classList.contains('error')) {
             passwordInput.classList.remove('error');
             errorMessage.style.display = 'none';
-            passwordModal.style.display = 'flex';
-            passwordInput.focus();
         }
-        
-        function mostrarErroSenha() {
-            passwordInput.classList.add('error');
-            errorMessage.style.display = 'block';
-            passwordInput.value = '';
-            passwordInput.focus();
-            
-            // Remover a classe de erro após um tempo
-            setTimeout(() => {
-                passwordInput.classList.remove('error');
-            }, 1000);
-        }
-        
-        function fecharModalSenha() {
-            passwordModal.style.display = 'none';
-        }
-        
-        // Event listeners do modal
-        passwordCancel.addEventListener('click', fecharModalSenha);
-        
-        passwordConfirm.addEventListener('click', async function() {
-            senhaDigitada = passwordInput.value;
-            if (!senhaDigitada) {
-                mostrarErroSenha();
-                return;
-            }
-            
-            // Validar senha antes de continuar
-            const SENHA_CORRETA = '9248';
-            if (senhaDigitada !== SENHA_CORRETA) {
-                mostrarErroSenha();
-                return;
-            }
-            
-            // Senha correta - prosseguir com o sorteio
+    });
+    passwordModal.addEventListener('click', function(e) {
+        if (e.target === passwordModal) {
             fecharModalSenha();
-            iniciarSorteio();
-        });
-        
-        // Enter no campo de senha
-        passwordInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                passwordConfirm.click();
-            }
-        });
-        
-        // Limpar erro quando começar a digitar novamente
-        passwordInput.addEventListener('input', function() {
-            if (passwordInput.classList.contains('error')) {
-                passwordInput.classList.remove('error');
-                errorMessage.style.display = 'none';
-            }
-        });
-        
-        // Fechar modal clicando fora
-        passwordModal.addEventListener('click', function(e) {
-            if (e.target === passwordModal) {
-                fecharModalSenha();
-            }
-        });
-        
-        function iniciarSorteio() {
-            // Desabilitar botão durante o sorteio
-            drawButton.disabled = true;
-            
-            // Esconder placeholder e mostrar contagem regressiva
-            winnerPlaceholder.style.display = 'none';
-            countdown.style.display = 'block';
-            
-            // Contagem regressiva
-            let seconds = 5;
-            countdown.textContent = seconds;
-            
-            const countdownInterval = setInterval(() => {
-                seconds--;
-                countdown.textContent = seconds;
-                
-                if (seconds <= 0) {
-                    clearInterval(countdownInterval);
-                    realizarSorteio(senhaDigitada); // Usar a senha digitada
-                }
-            }, 1000);
         }
-        
-        async function realizarSorteio(senha) {
-            try {
-                // Realizar sorteio via API com senha
-                const resultado = await API.realizarSorteio(senha);
-                
-                // Mostrar o vencedor
-                countdown.style.display = 'none';
-                winnerName.textContent = resultado.vencedor;
-                winnerNumber.textContent = `Número sorteado: ${resultado.numero}`;
-                winnerName.style.display = 'block';
+    });
+
+    // Função principal do sorteio animado
+    async function iniciarSorteioAnimado() {
+        drawButton.disabled = true;
+        winnerNumber.style.display = 'none';
+        winnerWindow.textContent = '';
+        namesScroller.innerHTML = '';
+
+        // Buscar nomes dos participantes
+        let nomesVendidos = {};
+        try {
+            const resultado = await API.getNumerosVendidos();
+            nomesVendidos = resultado;
+        } catch (error) {
+            nomesVendidos = JSON.parse(localStorage.getItem('numerosVendidos')) || {};
+        }
+        const nomes = Object.values(nomesVendidos);
+        if (nomes.length === 0) {
+            winnerWindow.textContent = 'Nenhum participante cadastrado!';
+            drawButton.disabled = false;
+            return;
+        }
+
+        // Escolher o sorteado
+        let sorteadoIndex = Math.floor(Math.random() * nomes.length);
+        let nomeSorteado = nomes[sorteadoIndex];
+        let numeroSorteado = Object.keys(nomesVendidos)[sorteadoIndex];
+
+        // Montar lista de nomes para animação
+        let nomesAnimacao = [];
+        for (let i = 0; i < 30; i++) {
+            nomesAnimacao = nomesAnimacao.concat(nomes);
+        }
+        // Garantir que o nome sorteado está no final
+        nomesAnimacao.push(nomeSorteado);
+
+        // Renderizar nomes
+        namesScroller.innerHTML = '';
+        nomesAnimacao.forEach((nome, idx) => {
+            const div = document.createElement('div');
+            div.textContent = nome;
+            div.style.height = '60px';
+            div.style.display = 'flex';
+            div.style.alignItems = 'center';
+            div.style.justifyContent = 'center';
+            div.style.fontSize = '2em';
+            div.style.margin = '0';
+            div.style.background = 'transparent';
+            div.style.border = 'none';
+            div.style.borderRadius = '0';
+            div.style.color = '#8b4513';
+            div.style.fontWeight = 'normal';
+            div.style.opacity = '0.8';
+            namesScroller.appendChild(div);
+        });
+
+        // Função para destacar apenas o nome central
+        function updateCentralNameColor(idxCentral) {
+            for (let i = 0; i < namesScroller.children.length; i++) {
+                const div = namesScroller.children[i];
+                if (i === idxCentral) {
+                    div.style.color = 'var(--primary)';
+                    div.style.fontWeight = 'bold';
+                    div.style.opacity = '1';
+                } else {
+                    div.style.color = '#8b4513';
+                    div.style.fontWeight = 'normal';
+                    div.style.opacity = '0.8';
+                }
+            }
+        }
+
+        // Animação de subida
+        let start = null;
+        let duration = 10000; // 10 segundos
+        let totalHeight = nomesAnimacao.length * 50;
+        let currentY = 0;
+        let lastFrame = 0;
+        function animateNamesScroll(ts) {
+            if (!start) start = ts;
+            let elapsed = ts - start;
+            let progress = Math.min(elapsed / duration, 1);
+            let ease = 1 - Math.pow(1 - progress, 2);
+            currentY = ease * (totalHeight - 60);
+            namesScroller.style.transform = `translateY(-${currentY}px)`;
+            // Atualizar texto da janela central
+            let idxCentral = Math.round(currentY / 60);
+            let nomeCentral = nomesAnimacao[Math.min(idxCentral, nomesAnimacao.length - 1)];
+            updateCentralNameColor(idxCentral);
+            winnerWindow.textContent = nomeCentral;
+            if (progress < 1) {
+                window.requestAnimationFrame(animateNamesScroll);
+            } else {
+                // Parar animação e mostrar sorteado
+                namesScroller.innerHTML = '';
+                winnerWindow.textContent = nomeSorteado;
+                winnerNumber.textContent = `Número sorteado: ${numeroSorteado}`;
                 winnerNumber.style.display = 'block';
-                
-                // Efeito de confete (simulado com CSS)
-                winnerName.classList.add('winner-animation');
-                
-                // Atualizar estatísticas após limpeza
+                drawButton.disabled = false;
                 setTimeout(() => {
                     carregarEstatisticas();
-                }, 2000);
-                
-            } catch (error) {
-                console.error('Erro no sorteio:', error);
-                alert('Erro ao realizar sorteio: ' + error.message);
-                
-                // Fallback para sorteio local
-                const numerosVendidos = JSON.parse(localStorage.getItem('numerosVendidos')) || {};
-                const numeros = Object.keys(numerosVendidos);
-                
-                if (numeros.length > 0) {
-                    const numeroSorteado = numeros[Math.floor(Math.random() * numeros.length)];
-                    const nomeVencedor = numerosVendidos[numeroSorteado];
-                    
-                    countdown.style.display = 'none';
-                    winnerName.textContent = nomeVencedor;
-                    winnerNumber.textContent = `Número sorteado: ${numeroSorteado}`;
-                    winnerName.style.display = 'block';
-                    winnerNumber.style.display = 'block';
-                    winnerName.classList.add('winner-animation');
-                }
-            } finally {
-                // Reabilitar botão
-                drawButton.disabled = false;
+                }, 1500);
             }
         }
+        window.requestAnimationFrame(animateNamesScroll);
+    }
     </script>
 </body>
 </html>
